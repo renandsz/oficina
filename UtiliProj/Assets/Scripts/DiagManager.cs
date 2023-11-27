@@ -31,6 +31,7 @@ public class DiagManager : MonoBehaviour
 
     IEnumerator ExibirSequencia(List<string> dialogo)
     {
+        proximo = false;
         foreach (var msg in dialogo)
         {
             continuar.SetActive(false);
