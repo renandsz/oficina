@@ -15,6 +15,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/SistemaDeDialogo/Scripts/EfeitoDigitador.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -64,7 +67,7 @@
       <workItem from="1699883711541" duration="3317000" />
       <workItem from="1699898114851" duration="4565000" />
       <workItem from="1701090113360" duration="6110000" />
-      <workItem from="1701108761516" duration="2273000" />
+      <workItem from="1701108761516" duration="3280000" />
     </task>
     <servers />
   </component>
