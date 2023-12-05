@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -8,12 +10,21 @@ public class DialogueManager : MonoBehaviour
     public GameObject botaoContinuar;
     public bool rodando, proximo;
 
-    public List<string> lista1, lista2;
-
-    // Start is called before the first frame update
-    void Start()
+    public Image imagemPerfil;
+    public TextMeshProUGUI nomePersonagem;
+   
+    public void PlayDialogo(Dialogo diag)
     {
-       // StartCoroutine(ExibirSequencia(lista1));
+        diag.personagem.DebugarQuemTaFalando();
+        imagemPerfil.sprite = diag.personagem.sprite;
+        nomePersonagem.text = diag.personagem.nome;
+        StartCoroutine(ExibirSequencia(diag.lista));
+    }
+
+    public void Resetar()
+    {
+        imagemPerfil.sprite = null;
+        nomePersonagem.text = "";
     }
 
     IEnumerator ExibirSequencia(List<string> lista)
@@ -40,20 +51,13 @@ public class DialogueManager : MonoBehaviour
         }
         caixaDeDialogo.Limpar();
         rodando = false;
+        Resetar();
         StopCoroutine(ExibirSequencia(lista));
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            StartCoroutine(ExibirSequencia(lista1));
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            StartCoroutine(ExibirSequencia(lista2));
-        }
         
         if (!caixaDeDialogo.imprimindo)
         {
