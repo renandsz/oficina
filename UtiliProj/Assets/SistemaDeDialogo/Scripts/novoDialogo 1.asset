@@ -12,8 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eac9ea67fba431458998f2c8b68a7c4, type: 3}
   m_Name: novoDialogo 1
   m_EditorClassIdentifier: 
+  personagem: {fileID: 11400000, guid: 411a7e3bdba231e46b995793a582796b, type: 2}
   lista:
-  - 3242342
-  - 4
-  - 534
-  - 34534534534
+  - "ol\xE1"
+  - "\xE9 perigoso ir sozinho tem um bixo l\xE1"
+  tipo: 2
+  proximo: {fileID: 11400000}
+  botao1: 1
+  msgBotao1: Entendi
+  diagBotao1: {fileID: 11400000, guid: 446b717a117eccc4a98fdb7035b4caae, type: 2}
+  botao2: 1
+  msgBotao2: Por favor repita
+  diagBotao2: {fileID: 11400000}

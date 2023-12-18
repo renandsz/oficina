@@ -1,24 +1,37 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
     public EfeitoDigitador caixaDeDialogo;
-    public GameObject botaoContinuar;
+    public GameObject botaoContinuar,painelDeFala,painelDeResposta,janelaDeDialogo;
     public bool rodando, proximo;
 
     public Image imagemPerfil;
-    public TextMeshProUGUI nomePersonagem;
-   
+    public TextMeshProUGUI nomePersonagem,msgBt1,msgBt2;
+    public GameObject bt1, bt2;
+    private EventSystem _eventSystem;
+
+    private int _respostaEscolhida = -1;
+
+    private void Awake()
+    {
+        _eventSystem = FindObjectOfType<EventSystem>();
+    }
+
     public void PlayDialogo(Dialogo diag)
     {
-        diag.personagem.DebugarQuemTaFalando();
+        janelaDeDialogo.SetActive(true);
         imagemPerfil.sprite = diag.personagem.sprite;
         nomePersonagem.text = diag.personagem.nome;
-        StartCoroutine(ExibirSequencia(diag.lista));
+        painelDeFala.SetActive(true);
+        painelDeResposta.SetActive(false);
+        StartCoroutine(ExibirSequencia(diag));
     }
 
     public void Resetar()
@@ -27,14 +40,21 @@ public class DialogueManager : MonoBehaviour
         nomePersonagem.text = "";
     }
 
-    IEnumerator ExibirSequencia(List<string> lista)
+    IEnumerator DialogueCoroutine(Dialogo diagSO)
+    {
+        if (rodando) yield break;
+        
+        
+    }
+
+    IEnumerator ExibirSequencia(Dialogo diag)
     {
         if (rodando) yield break;
         rodando = true;
         proximo = false;
         botaoContinuar.SetActive(false);
 
-        foreach (var mensagem in lista)
+        foreach (var mensagem in diag.lista)
         {
             caixaDeDialogo.ImprimirMensagem(mensagem);
             while (caixaDeDialogo.imprimindo)
@@ -42,6 +62,7 @@ public class DialogueManager : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             botaoContinuar.SetActive(true);
+            _eventSystem.SetSelectedGameObject(botaoContinuar);
             while (!proximo)
             {
                 yield return new WaitForEndOfFrame();
@@ -49,22 +70,65 @@ public class DialogueManager : MonoBehaviour
             botaoContinuar.SetActive(false);
             proximo = false;
         }
-        caixaDeDialogo.Limpar();
+        //verificar se tem q mostrar botoes de resposta
+        if (diag.tipo == TipoDialogo.passarDireto)
+        {
+            janelaDeDialogo.SetActive(false);
+        }
+        if (diag.tipo == TipoDialogo.mostrarRespostas)
+        {
+            painelDeFala.SetActive(false);
+            AtualizarBotoes(diag);
+            painelDeResposta.SetActive(true);
+            while (_respostaEscolhida == -1)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            rodando = false;
+            StopCoroutine(ExibirSequencia(diag));
+            switch (_respostaEscolhida)
+            {
+                case 1:
+                    ExibirSequencia(diag.diagBotao1);
+                    break;
+                case 2:
+                    ExibirSequencia(diag.diagBotao2);
+                    break;
+            }
+            _eventSystem.SetSelectedGameObject(bt1);
+        }
+        
+        
         rodando = false;
-        Resetar();
-        StopCoroutine(ExibirSequencia(lista));
+        //janelaDeDialogo.SetActive(false);
+        StopCoroutine(ExibirSequencia(diag));
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Proximo()
     {
-        
         if (!caixaDeDialogo.imprimindo)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                proximo = true;
-            }
+            proximo = true;
         }
     }
+
+    public void Responder(int numeroBotao)
+    {
+        _respostaEscolhida = numeroBotao;
+    }
+
+    public void AtualizarBotoes(Dialogo diag)
+    {
+        if (diag.tipo != TipoDialogo.mostrarRespostas) return;
+        if (diag.botao1)
+        {
+            msgBt1.text = diag.msgBotao1;
+        }
+        if (diag.botao2)
+        {
+            msgBt2.text = diag.msgBotao2;
+        }
+    }
+    
+    
 }
